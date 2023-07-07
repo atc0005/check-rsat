@@ -39,7 +39,7 @@ func SyncPlansVerboseReport(orgs rsat.Organizations, cfg *config.Config, _ zerol
 // syncPlansVerboseReport is a helper function that performs the bulk of
 // the "verbose" report output logic.
 func syncPlansVerboseReport(w io.Writer, cfg *config.Config, orgs rsat.Organizations) {
-	for i, org := range orgs {
+	for _, org := range orgs {
 		switch {
 		// If no problems to report and user opted to omit OK results we just
 		// list the Orgs here with summary details. We will skip listing the
@@ -102,9 +102,6 @@ func syncPlansVerboseReport(w io.Writer, cfg *config.Config, orgs rsat.Organizat
 			}
 		}
 
-		// Group sync plans visually on Org.
-		if i+1 < len(orgs) {
-			fmt.Fprint(w, nagios.CheckOutputEOL)
-		}
+		fmt.Fprint(w, nagios.CheckOutputEOL)
 	}
 }
