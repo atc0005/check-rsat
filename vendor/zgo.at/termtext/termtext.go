@@ -2,6 +2,7 @@
 package termtext
 
 import (
+	"bytes"
 	"strings"
 	"unicode"
 
@@ -25,13 +26,13 @@ func Width(s string) int {
 	for g.Next() {
 		runes := g.Runes()
 
-		// More than one codepoint: use the width of the first one non-zero one.
+		/// More than one codepoint: use the width of the first one non-zero one.
 		if len(runes) > 1 {
 			l += clusterWidth(runes)
 			continue
 		}
 
-		// One codepoint: check for tab and escapes.
+		/// One codepoint: check for tab and escapes.
 		switch r := runes[0]; {
 		case r == '\t':
 			l += TabWidth - l%TabWidth
@@ -66,7 +67,7 @@ func Expand(s string) string {
 			continue
 		}
 
-		// One codepoint: check for tab and escapes.
+		/// One codepoint: check for tab and escapes.
 		switch r := runes[0]; {
 		case r == '\t':
 			tw := TabWidth - l%TabWidth
@@ -136,8 +137,11 @@ func AlignCenter(s string, w int) string {
 //
 // Tabs will be expanded to spaces.
 func Slice(s string, start, stop int) string {
-	s = Expand(s)
+	if start == stop {
+		return ""
+	}
 
+	s = Expand(s)
 	var (
 		g                 = uniseg.NewGraphemes(s)
 		startOff, stopOff int
@@ -165,7 +169,7 @@ func Slice(s string, start, stop int) string {
 			continue
 		}
 
-		// One codepoint: check for tab and escapes.
+		/// One codepoint: check for tab and escapes.
 		switch r := runes[0]; {
 		case r == '\x1b':
 			esc = true
@@ -176,6 +180,9 @@ func Slice(s string, start, stop int) string {
 		default:
 			pos += runewidth.RuneWidth(r)
 		}
+	}
+	if stopOff == 0 {
+		stopOff = len(s)
 	}
 	return s[startOff:stopOff]
 }
@@ -195,6 +202,7 @@ func Wrap(s string, w int, prefix string) string {
 		l = 0
 		b strings.Builder
 	)
+	b.Grow(len(s))
 	for g.Next() {
 		runes := g.Runes()
 
@@ -210,8 +218,16 @@ func Wrap(s string, w int, prefix string) string {
 		if l+cw > w {
 			b.WriteByte('\n')
 			b.WriteString(prefix)
-			b.WriteString(string(runes))
-			l = cw
+			if len(runes) == 1 && unicode.IsSpace(runes[0]) { /// No spaces at start of line.
+				l = 0
+			} else {
+				b.WriteString(string(runes))
+				l = cw
+			}
+			continue
+		}
+
+		if l == 0 && len(runes) == 1 && unicode.IsSpace(runes[0]) { /// No spaces at start of line.
 			continue
 		}
 
@@ -229,17 +245,24 @@ func Wrap(s string, w int, prefix string) string {
 //
 // Tabs will be expanded to spaces.
 func WordWrap(s string, w int, prefix string) string {
+	s = Expand(s)
 	var (
 		g       = uniseg.NewGraphemes(s)
-		b       strings.Builder
+		b       bytes.Buffer
 		lineLen int
 		wordLen int
 		word    strings.Builder
 	)
+	b.Grow(len(s))
 	for g.Next() {
 		runes := g.Runes()
 
+		/// Line break in input: reset word; start a new line.
 		if len(runes) == 1 && runes[0] == '\n' {
+			if lineLen+wordLen > w {
+				b.WriteByte('\n')
+				b.WriteString(prefix)
+			}
 			b.WriteString(word.String())
 			b.WriteByte('\n')
 			b.WriteString(prefix)
@@ -251,10 +274,11 @@ func WordWrap(s string, w int, prefix string) string {
 
 		runesLen := clusterWidth(runes)
 
-		// Note that unicode word breaks are actually quite a bit more complex,
-		// but yeah, this should be "good enough".
+		/// Note that unicode word breaks are actually quite a bit more complex,
+		/// but yeah, this should be "good enough".
 		if len(runes) == 1 && isBreak(runes[0]) {
 			if lineLen > w { /// Break and write word on next line.
+				b.Truncate(b.Len() - 1) /// Trailing space.
 				b.WriteByte('\n')
 				b.WriteString(prefix)
 				b.WriteString(word.String())
@@ -279,8 +303,11 @@ func WordWrap(s string, w int, prefix string) string {
 		wordLen += runesLen
 		word.WriteString(string(runes))
 	}
+
+	/// Last word.
 	if lineLen > 0 {
 		if lineLen > w {
+			b.Truncate(b.Len() - 1) /// Trailing space.
 			b.WriteByte('\n')
 			b.WriteString(prefix)
 		}
@@ -291,7 +318,7 @@ func WordWrap(s string, w int, prefix string) string {
 }
 
 func isBreak(r rune) bool {
-	return unicode.IsSpace(r) && r != 0x0a
+	return unicode.IsSpace(r) && r != '\n'
 }
 
 func clusterWidth(runes []rune) int {
