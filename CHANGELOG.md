@@ -26,7 +26,7 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
-## [v0.1.0] - 2022-04-xx
+## [v0.1.0] - 2023-07-07
 
 Initial release!
 
@@ -35,10 +35,12 @@ Satellite (RSAT) instances. This evaluation is performed using official APIs.
 
 ### Added
 
-- `lsrs`, a CLI app to list details from a Red Hat Satellite (RSAT) instance.
+- `lssp`, a CLI app to list Red Hat Satellite sync plans.
+- `check_rsat_sync_plans`, a Nagios plugin used to monitor for problematic Red
+  Hat Satellite (RSAT) sync plans.
 
-- `check_rsat_subscriptions`, a Nagios plugin used to monitor subscription
-  thresholds for one or more RSAT Organizations.
+Just to be 100% clear: this project is not affiliated with or
+endorsed by  Red Hat, Inc.
 
 [Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.0...HEAD
 [v0.1.0]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.0
