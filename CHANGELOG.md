@@ -26,6 +26,24 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.1.1] - 2023-07-13
+
+### Overview
+
+- Dependency updates
+- built using Go 1.19.11
+  - Statically linked
+  - Windows (x86, x64)
+  - Linux (x86, x64)
+
+### Changed
+
+- Dependencies
+  - `Go`
+    - `1.19.10` to `1.19.11`
+  - `atc0005/go-ci`
+    - `go-ci-oldstable-build-v0.11.0` to `go-ci-oldstable-build-v0.11.3`
+
 ## [v0.1.0] - 2023-07-07
 
 Initial release!
@@ -42,5 +60,6 @@ Satellite (RSAT) instances. This evaluation is performed using official APIs.
 Just to be 100% clear: this project is not affiliated with or
 endorsed by  Red Hat, Inc.
 
-[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.1...HEAD
+[v0.1.1]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.1
 [v0.1.0]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.0
