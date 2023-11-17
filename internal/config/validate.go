@@ -72,8 +72,7 @@ func (c Config) validate(appType AppType) error {
 
 	case !textutils.InList(c.NetworkType, supportedNetworkTypes(), true):
 		return fmt.Errorf(
-			"%w: invalid network type;"+
-				" got %v, expected one of %v",
+			"%w: invalid network type; got %v, expected one of %v",
 			ErrUnsupportedOption,
 			c.NetworkType,
 			supportedNetworkTypes(),
@@ -81,8 +80,7 @@ func (c Config) validate(appType AppType) error {
 
 	case !textutils.InList(c.LoggingLevel, supportedLogLevels(), true):
 		return fmt.Errorf(
-			"%w: invalid logging level;"+
-				" got %v, expected one of %v",
+			"%w: invalid logging level; got %v, expected one of %v",
 			ErrUnsupportedOption,
 			c.LoggingLevel,
 			supportedLogLevels(),
@@ -95,8 +93,7 @@ func (c Config) validate(appType AppType) error {
 		supportedFormats := supportedInspectorOutputFormats()
 		if !textutils.InList(c.InspectorOutputFormat, supportedFormats, true) {
 			return fmt.Errorf(
-				"%w: invalid output format;"+
-					" got %v, expected one of %v",
+				"%w: invalid output format; got %v, expected one of %v",
 				ErrUnsupportedOption,
 				c.InspectorOutputFormat,
 				supportedFormats,
