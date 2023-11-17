@@ -45,6 +45,10 @@ const (
 	pluginTimeoutFlagHelp string = "Timeout value in seconds before plugin execution is abandoned and an error returned."
 )
 
+// shorthandFlagSuffix is appended to short flag help text to emphasize that
+// the flag is a shorthand version of a longer flag.
+const shorthandFlagSuffix = " (shorthand)"
+
 // Flag names for consistent references. Exported so that they're available
 // from tests.
 const (
