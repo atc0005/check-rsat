@@ -36,7 +36,7 @@ func (c *Config) handleFlagsConfig(appType AppType) error {
 	}
 
 	// shared flags
-	c.flagSet.BoolVar(&c.ShowHelp, HelpFlagShort, defaultHelp, helpFlagHelp+" (shorthand)")
+	c.flagSet.BoolVar(&c.ShowHelp, HelpFlagShort, defaultHelp, helpFlagHelp+shorthandFlagSuffix)
 	c.flagSet.BoolVar(&c.ShowHelp, HelpFlagLong, defaultHelp, helpFlagHelp)
 
 	c.flagSet.BoolVar(&c.ShowVersion, VersionFlagLong, defaultDisplayVersionAndExit, versionFlagHelp)
@@ -45,7 +45,7 @@ func (c *Config) handleFlagsConfig(appType AppType) error {
 		&c.LoggingLevel,
 		LogLevelFlagShort,
 		defaultLogLevel,
-		supportedValuesFlagHelpText(logLevelFlagHelp, supportedLogLevels())+" (shorthand)",
+		supportedValuesFlagHelpText(logLevelFlagHelp, supportedLogLevels())+shorthandFlagSuffix,
 	)
 	c.flagSet.StringVar(
 		&c.LoggingLevel,
@@ -74,7 +74,7 @@ func (c *Config) handleFlagsConfig(appType AppType) error {
 
 	switch {
 	case appType.Inspector:
-		c.flagSet.IntVar(&c.timeout, TimeoutFlagShort, defaultCLIAppTimeout, cliAppTimeoutFlagHelp+" (shorthand)")
+		c.flagSet.IntVar(&c.timeout, TimeoutFlagShort, defaultCLIAppTimeout, cliAppTimeoutFlagHelp+shorthandFlagSuffix)
 		c.flagSet.IntVar(&c.timeout, TimeoutFlagLong, defaultCLIAppTimeout, cliAppTimeoutFlagHelp)
 
 		c.flagSet.StringVar(
@@ -86,7 +86,7 @@ func (c *Config) handleFlagsConfig(appType AppType) error {
 
 	case appType.Plugin:
 		c.flagSet.BoolVar(&c.ShowVerbose, VerboseFlagLong, defaultVerbose, verboseFlagHelp)
-		c.flagSet.IntVar(&c.timeout, TimeoutFlagShort, defaultPluginTimeout, pluginTimeoutFlagHelp+" (shorthand)")
+		c.flagSet.IntVar(&c.timeout, TimeoutFlagShort, defaultPluginTimeout, pluginTimeoutFlagHelp+shorthandFlagSuffix)
 		c.flagSet.IntVar(&c.timeout, TimeoutFlagLong, defaultPluginTimeout, pluginTimeoutFlagHelp)
 
 	}
