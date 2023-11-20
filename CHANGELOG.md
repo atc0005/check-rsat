@@ -26,6 +26,34 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.1.3] - 2023-11-20
+
+### Changed
+
+#### Dependency Updates
+
+- (GH-103) canary: bump golang from 1.20.10 to 1.20.11 in /dependabot/docker/go
+- (GH-69) canary: bump golang from 1.20.7 to 1.20.8 in /dependabot/docker/go
+- (GH-92) canary: bump golang from 1.20.8 to 1.20.10 in /dependabot/docker/go
+- (GH-94) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.13.10 to go-ci-oldstable-build-v0.13.12 in /dependabot/docker/builds
+- (GH-105) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.13.12 to go-ci-oldstable-build-v0.14.1 in /dependabot/docker/builds
+- (GH-60) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.13.4 to go-ci-oldstable-build-v0.13.5 in /dependabot/docker/builds
+- (GH-61) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.13.5 to go-ci-oldstable-build-v0.13.6 in /dependabot/docker/builds
+- (GH-63) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.13.6 to go-ci-oldstable-build-v0.13.7 in /dependabot/docker/builds
+- (GH-71) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.13.7 to go-ci-oldstable-build-v0.13.8 in /dependabot/docker/builds
+- (GH-76) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.13.8 to go-ci-oldstable-build-v0.13.9 in /dependabot/docker/builds
+- (GH-81) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.13.9 to go-ci-oldstable-build-v0.13.10 in /dependabot/docker/builds
+- (GH-67) ghaw: bump actions/checkout from 3 to 4
+- (GH-98) go.mod: bump github.com/mattn/go-isatty from 0.0.19 to 0.0.20
+- (GH-84) go.mod: bump github.com/rs/zerolog from 1.30.0 to 1.31.0
+- (GH-66) go.mod: bump golang.org/x/sys from 0.11.0 to 0.12.0
+- (GH-89) go.mod: bump golang.org/x/sys from 0.12.0 to 0.13.0
+- (GH-102) go.mod: bump golang.org/x/sys from 0.13.0 to 0.14.0
+
+### Fixed
+
+- (GH-108) Fix goconst linting errors
+
 ## [v0.1.2] - 2023-08-17
 
 ### Added
@@ -83,7 +111,8 @@ Satellite (RSAT) instances. This evaluation is performed using official APIs.
 Just to be 100% clear: this project is not affiliated with or
 endorsed by  Red Hat, Inc.
 
-[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.3...HEAD
+[v0.1.3]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.3
 [v0.1.2]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.2
 [v0.1.1]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.1
 [v0.1.0]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.0
