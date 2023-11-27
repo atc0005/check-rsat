@@ -31,5 +31,5 @@ gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
 zgo.at/acidtab v1.0.0 h1:KtXvxtY0uXKNQW1dz113e++5XodEs5HEqIO9AJDT7Nk=
 zgo.at/acidtab v1.0.0/go.mod h1:dOHM1/D5cRCsskzFmyniTDVZjuwnqFdAcvRiT3RTvY0=
 zgo.at/termtext v0.0.0-20211017203350-a2beb4680d76/go.mod h1:P0jvULwo8z82ad7+WR6vg5vTy86dqvbOmR3bT3NlYvc=
-zgo.at/termtext v1.1.0 h1:fBwyR6BVw1DnOIGmRhlQwM3cePzoJtY9FHpc62TwCWU=
-zgo.at/termtext v1.1.0/go.mod h1:P0jvULwo8z82ad7+WR6vg5vTy86dqvbOmR3bT3NlYvc=
+zgo.at/termtext v1.2.0 h1:l8X6/dWho0vEfNJiNiNmtjofHNjFc52ON+/tbdf2B54=
+zgo.at/termtext v1.2.0/go.mod h1:0BcvPG9CB8vjIMflLVU4Xy4+HsoIdUKTfo+GLOWYF8A=
