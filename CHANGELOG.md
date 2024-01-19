@@ -26,6 +26,17 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.1.5] - 2024-01-19
+
+### Changed
+
+#### Dependency Updates
+
+- (GH-125) ghaw: bump github/codeql-action from 2 to 3
+- (GH-131) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.14.2 to go-ci-oldstable-build-v0.14.3 in /dependabot/docker/builds
+- (GH-127) go.mod: bump golang.org/x/sys from 0.15.0 to 0.16.0
+- (GH-129) canary: bump golang from 1.20.12 to 1.20.13 in /dependabot/docker/go
+
 ## [v0.1.4] - 2023-12-08
 
 ### Changed
@@ -122,7 +133,8 @@ Satellite (RSAT) instances. This evaluation is performed using official APIs.
 Just to be 100% clear: this project is not affiliated with or
 endorsed by  Red Hat, Inc.
 
-[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.4...HEAD
+[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.5...HEAD
+[v0.1.5]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.5
 [v0.1.4]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.4
 [v0.1.3]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.3
 [v0.1.2]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.2
