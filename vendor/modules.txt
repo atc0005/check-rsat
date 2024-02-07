@@ -13,7 +13,7 @@ github.com/mattn/go-runewidth
 # github.com/rivo/uniseg v0.4.6
 ## explicit; go 1.18
 github.com/rivo/uniseg
-# github.com/rs/zerolog v1.31.0
+# github.com/rs/zerolog v1.32.0
 ## explicit; go 1.15
 github.com/rs/zerolog
 github.com/rs/zerolog/internal/cbor
