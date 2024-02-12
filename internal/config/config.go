@@ -75,14 +75,15 @@ type Config struct {
 	InspectorOutputFormat string
 
 	// NetworkType indicates whether an attempt should be made to connect to
-	// only IPv4, only IPv6 or SSH servers listening on either of IPv4 or IPv6
-	// addresses ("auto").
+	// only IPv4, only IPv6 or Red Hat Satellite API endpoints listening on
+	// either of IPv4 or IPv6 addresses ("auto").
 	NetworkType string
 
-	// Server is the SSH server FQDN or IP Address.
+	// Server is the Red Hat Satellite API endpoint FQDN or IP Address.
 	Server string
 
-	// Username is the valid user for the given SSH server.
+	// Username is the valid user for the given Red Hat Satellite API
+	// endpoint.
 	Username string
 
 	// Password is the valid password for the specified user.
@@ -92,11 +93,12 @@ type Config struct {
 	// certificate chain used by the Red Hat Satellite server.
 	CACertificate string
 
-	// TCPPort is the port used by the SSH service.
+	// TCPPort is the port used by the Red Hat Satellite API endpoint.
 	TCPPort int
 
 	// timeout is the number of seconds allowed before the connection attempt
-	// to the SSH service is abandoned and an error returned.
+	// to the Red Hat Satellite API endpoint is abandoned and an error
+	// returned.
 	timeout int
 
 	// ReadLimit is a limit in bytes set to help prevent abuse when reading
