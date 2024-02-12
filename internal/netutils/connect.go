@@ -31,7 +31,8 @@ func DialerWithContext(networkType string, logger zerolog.Logger) HTTPTransportD
 	return func(ctx context.Context, network string, address string) (net.Conn, error) {
 		logger = logger.With().
 			Str("address", address).
-			Str("net_type", networkType).
+			Str("net_type_original", network).
+			Str("net_type_overridden", networkType).
 			Logger()
 
 		logger.Debug().Msg("resolving hostname")
