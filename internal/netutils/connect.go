@@ -139,12 +139,6 @@ func openConnection(ctx context.Context, addrs []string, port string, netType st
 		// Attempt to connect to the given IP Address.
 		c, connectErr = dialer.Dial(netType, s)
 
-		// pass in explicitly set SSH config using provided server name, but
-		// attempt to connect to specific IP Address returned from earlier
-		// lookup. We'll attempt to loop over each available IP Address until
-		// we are able to successfully connect to one of them.
-		// c, connectErr = client.DialWithDialerTLS(&dialer, s, tlsConfig)
-
 		if connectErr != nil {
 			logger.Debug().
 				Err(connectErr).
