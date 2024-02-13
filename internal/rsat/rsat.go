@@ -79,8 +79,8 @@ type APIAuthInfo struct {
 	UserAgent string
 
 	// NetworkType indicates whether an attempt should be made to connect to
-	// only IPv4, only IPv6 or SSH servers listening on either of IPv4 or IPv6
-	// addresses ("auto").
+	// only IPv4, only IPv6 or Red Hat Satellite API endpoints listening on
+	// either of IPv4 or IPv6 addresses ("auto").
 	NetworkType string
 
 	// CACert is the optional certificate authority certificate used to
