@@ -26,6 +26,29 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.1.6] - 2024-02-15
+
+### Changed
+
+#### Dependency Updates
+
+- (GH-153) canary: bump golang from 1.20.13 to 1.20.14 in /dependabot/docker/go
+- (GH-135) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.14.3 to go-ci-oldstable-build-v0.14.4 in /dependabot/docker/builds
+- (GH-139) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.14.4 to go-ci-oldstable-build-v0.14.5 in /dependabot/docker/builds
+- (GH-145) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.14.5 to go-ci-oldstable-build-v0.14.6 in /dependabot/docker/builds
+- (GH-160) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.14.6 to go-ci-oldstable-build-v0.14.9 in /dependabot/docker/builds
+- (GH-163) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.14.9 to go-ci-oldstable-build-v0.15.0 in /dependabot/docker/builds
+- (GH-138) go.mod: bump github.com/atc0005/go-nagios from 0.16.0 to 0.16.1
+- (GH-143) go.mod: bump github.com/rivo/uniseg from 0.4.4 to 0.4.6
+- (GH-158) go.mod: bump github.com/rivo/uniseg from 0.4.6 to 0.4.7
+- (GH-146) go.mod: bump github.com/rs/zerolog from 1.31.0 to 1.32.0
+- (GH-154) go.mod: bump golang.org/x/sys from 0.16.0 to 0.17.0
+
+### Fixed
+
+- (GH-168) Fix unused-param revive linting error
+- (GH-169) Remove references to SSH server
+
 ## [v0.1.5] - 2024-01-19
 
 ### Changed
@@ -133,7 +156,8 @@ Satellite (RSAT) instances. This evaluation is performed using official APIs.
 Just to be 100% clear: this project is not affiliated with or
 endorsed by  Red Hat, Inc.
 
-[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.5...HEAD
+[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.6...HEAD
+[v0.1.6]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.6
 [v0.1.5]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.5
 [v0.1.4]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.4
 [v0.1.3]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.3
