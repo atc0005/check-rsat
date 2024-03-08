@@ -26,6 +26,23 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.1.7] - 2024-03-08
+
+### Changed
+
+#### Dependency Updates
+
+- (GH-188) Add todo/release label to "Go Runtime" PRs
+- (GH-179) Build Image: Bump atc0005/go-ci from go-ci-oldstable-build-v0.15.2 to go-ci-oldstable-build-v0.15.3 in /dependabot/docker/builds
+- (GH-186) Build Image: Bump atc0005/go-ci from go-ci-oldstable-build-v0.15.3 to go-ci-oldstable-build-v0.15.4 in /dependabot/docker/builds
+- (GH-176) canary: bump golang from 1.21.6 to 1.21.7 in /dependabot/docker/go
+- (GH-173) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.15.0 to go-ci-oldstable-build-v0.15.2 in /dependabot/docker/builds
+- (GH-182) Go Dependency: Bump golang.org/x/sys from 0.17.0 to 0.18.0
+- (GH-184) Go Runtime: Bump golang from 1.21.7 to 1.21.8 in /dependabot/docker/go
+- (GH-178) Update Dependabot PR prefixes (redux)
+- (GH-177) Update Dependabot PR prefixes
+- (GH-175) Update project to Go 1.21 series
+
 ## [v0.1.6] - 2024-02-15
 
 ### Changed
@@ -156,7 +173,8 @@ Satellite (RSAT) instances. This evaluation is performed using official APIs.
 Just to be 100% clear: this project is not affiliated with or
 endorsed by  Red Hat, Inc.
 
-[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.6...HEAD
+[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.7...HEAD
+[v0.1.7]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.7
 [v0.1.6]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.6
 [v0.1.5]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.5
 [v0.1.4]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.4
