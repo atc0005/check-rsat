@@ -16,7 +16,6 @@ github.com/mattn/go-runewidth v0.0.15/go.mod h1:Jdepj2loyihRzMpdS35Xk/zdY8IAYHsh
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/rivo/uniseg v0.2.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
-github.com/rivo/uniseg v0.4.4/go.mod h1:FN3SvrM+Zdj16jyLfmOkMNblXMcoc8DfTHruCPUcx88=
 github.com/rivo/uniseg v0.4.7 h1:WUdvkW8uEhrYfLC4ZzdpI2ztxP1I582+49Oc5Mq64VQ=
 github.com/rivo/uniseg v0.4.7/go.mod h1:FN3SvrM+Zdj16jyLfmOkMNblXMcoc8DfTHruCPUcx88=
 github.com/rs/xid v1.5.0/go.mod h1:trrq9SKmegXys3aeAKXMUTdJsYXVwGY3RLcfgqegfbg=
@@ -32,5 +31,5 @@ gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
 zgo.at/acidtab v1.0.0 h1:KtXvxtY0uXKNQW1dz113e++5XodEs5HEqIO9AJDT7Nk=
 zgo.at/acidtab v1.0.0/go.mod h1:dOHM1/D5cRCsskzFmyniTDVZjuwnqFdAcvRiT3RTvY0=
 zgo.at/termtext v0.0.0-20211017203350-a2beb4680d76/go.mod h1:P0jvULwo8z82ad7+WR6vg5vTy86dqvbOmR3bT3NlYvc=
-zgo.at/termtext v1.2.0 h1:l8X6/dWho0vEfNJiNiNmtjofHNjFc52ON+/tbdf2B54=
-zgo.at/termtext v1.2.0/go.mod h1:0BcvPG9CB8vjIMflLVU4Xy4+HsoIdUKTfo+GLOWYF8A=
+zgo.at/termtext v1.3.0 h1:aJRg7PJOJHJCsWnzmYk8iLWP/bd9rfw9zOmyMNxzyXk=
+zgo.at/termtext v1.3.0/go.mod h1:CBx+HpG2ijB3W0Bd4CK8UtzcsXw+EmvvlhQUyQpZO+E=
