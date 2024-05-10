@@ -192,9 +192,10 @@ func parseDate(datetime string) (time.Time, error) {
 		LegacySyncTimeLayout,
 	}
 
+	var result time.Time
 	var err error
 	for _, layout := range knownLayouts {
-		result, err := time.Parse(layout, datetime)
+		result, err = time.Parse(layout, datetime)
 		if err == nil {
 			return result, nil
 		}
