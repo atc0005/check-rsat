@@ -18,23 +18,72 @@ import (
 // - https://romangaranin.net/posts/2021-02-19-json-time-and-golang/
 // - https://pkg.go.dev/time#pkg-constants
 
+// Time layouts observed "in the wild" for various versions of Red Hat
+// Satellite.
 const (
-	// StandardAPITimeLayout is the time layout format as used by the Red Hat
-	// Satellite API for the majority of the date/time properties.
+	// StandardAPITimeLayoutWithTimezone is the time layout format as used by
+	// the Red Hat Satellite API for the majority of the date/time properties
+	// when the user has their Satellite account timezone setting configured
+	// as `(GMT+00:00) UTC`.
 	//
-	// Examples:
+	// Examples (from JSON API response) for Satellite 6.15:
 	//
-	// - "created_at": "2020-12-03 15:05:00 UTC",
-	// - "updated_at": "2020-12-03 15:05:00 UTC",
-	StandardAPITimeLayout string = "2006-01-02 15:04:05 MST"
-
-	// SyncTimeLayout is the time layout format as used by the Red Hat
-	// Satellite Sync Plans API for the next_sync property.
-	//
-	// Example: "next_sync": "2022/03/28 20:05:00 +0000"
+	// "created_at": "2024-05-09 21:14:51 UTC",
+	// "updated_at": "2024-05-09 21:14:51 UTC",
 	//
 	// See also https://rsat.example.com/apidoc/v2/sync_plans/index.html
-	SyncTimeLayout string = "2006/01/02 15:04:05 -0700"
+	StandardAPITimeLayoutWithTimezone string = "2006-01-02 15:04:05 UTC"
+
+	// StandardAPITimeLayoutWithOffset is the time layout format as used by
+	// the Red Hat Satellite API for the majority of the date/time properties
+	// when the user has their Satellite account timezone setting configured
+	// as `Browser timezone`.
+	//
+	// Examples (from JSON API response):
+	//
+	// "created_at": "2024-05-09 16:14:51 -0500",
+	// "updated_at": "2024-05-09 16:14:51 -0500",
+	//
+	// See also https://rsat.example.com/apidoc/v2/sync_plans/index.html
+	StandardAPITimeLayoutWithOffset string = "2006-01-02 15:04:05 -0700"
+
+	// SyncTimeLayoutWithTimezone is the time layout format as used by current
+	// versions of the Red Hat Satellite Sync Plans API for the next_sync
+	// property in current versions of Red Hat Satellite when the user has
+	// their Satellite account timezone setting configured as `(GMT+00:00)
+	// UTC`.
+	//
+	// Example: "next_sync": "2024-05-10 17:14:00 UTC",
+	//
+	// See also https://rsat.example.com/apidoc/v2/sync_plans/index.html
+	SyncTimeLayoutWithTimezone string = "2006-01-02 15:04:05 UTC"
+
+	// SyncTimeLayoutWithOffset is the time layout format as used by current
+	// versions of the Red Hat Satellite Sync Plans API for the next_sync
+	// property when the user has their Satellite account timezone setting
+	// configured as `Browser timezone`.
+	//
+	// Example: "next_sync": "2024/05/10 15:16:00 -0500",
+	//
+	// See also https://rsat.example.com/apidoc/v2/sync_plans/index.html
+	SyncTimeLayoutWithOffset string = "2006-01-02 15:04:05 -0700"
+
+	// LegacySyncTimeLayout is the time layout format as used by legacy
+	// versions of the Red Hat Satellite Sync Plans API for the next_sync
+	// property (e.g., Satellite 6.5).
+	//
+	// Example(account Timezone property is set to `(GMT+00:00) UTC`):
+	//
+	// "next_sync": "2024/05/10 20:16:00 +0000",
+	//
+	// Example(account Timezone property is set to `Browser timezone`):
+	//
+	// "next_sync": "2024/05/10 15:16:00 -0500",
+	//
+	// This layout works equally well for both.
+	//
+	// See also https://rsat.example.com/apidoc/v2/sync_plans/index.html
+	LegacySyncTimeLayout string = "2006/01/02 15:04:05 -0700"
 )
 
 // StandardAPITime is time value as represented in the Red Hat Satellite API
@@ -49,7 +98,7 @@ type SyncTime time.Time
 
 // String implements the fmt.Stringer interface as a convenience method.
 func (dt StandardAPITime) String() string {
-	return dt.Format(StandardAPITimeLayout)
+	return dt.Format(StandardAPITimeLayoutWithOffset)
 }
 
 // String implements the fmt.Stringer interface as a convenience method.
@@ -59,7 +108,7 @@ func (dt SyncTime) String() string {
 	case time.Time(dt).IsZero():
 		return "Not scheduled"
 	default:
-		return time.Time(dt).Local().Format(StandardAPITimeLayout)
+		return time.Time(dt).Local().Format(StandardAPITimeLayoutWithOffset)
 	}
 }
 
@@ -75,23 +124,23 @@ func (dt SyncTime) Format(layout string) string {
 
 // MarshalJSON implements the json.Marshaler interface. This compliments the
 // custom Unmarshaler implementation to handle conversion of a native Go
-// time.Time format to the JSON API expectations of a time value in the
-// StandardAPITimeLayout format.
+// time.Time format to a time value in a format that matches JSON API
+// expectations.
 func (dt StandardAPITime) MarshalJSON() ([]byte, error) {
-	return json.Marshal(time.Time(dt).Format(StandardAPITimeLayout))
+	return json.Marshal(time.Time(dt).Format(StandardAPITimeLayoutWithOffset))
 }
 
 // MarshalJSON implements the json.Marshaler interface. This compliments the
 // custom Unmarshaler implementation to handle conversion of a native Go
-// time.Time format to the JSON API expectations of a time value in the
-// SyncTimeLayout format.
+// time.Time format to a time value in a format that matches JSON API
+// expectations.
 func (dt SyncTime) MarshalJSON() ([]byte, error) {
-	return json.Marshal(time.Time(dt).Format(SyncTimeLayout))
+	return json.Marshal(time.Time(dt).Format(SyncTimeLayoutWithOffset))
 }
 
 // UnmarshalJSON implements the json.Unmarshaler interface to handle
 // converting a time string from the JSON API (most time properties) to a
-// native Go time.Time value using the StandardAPITimeLayout format.
+// native Go time.Time value using a supported auto-detected layout.
 func (dt *StandardAPITime) UnmarshalJSON(data []byte) error {
 	value := strings.Trim(string(data), `"`) // get rid of "
 	if value == "" || value == JSONNullKeyword {
@@ -100,11 +149,7 @@ func (dt *StandardAPITime) UnmarshalJSON(data []byte) error {
 		return nil
 	}
 
-	// Parse time, explicitly setting UTC location (even though the JSON API
-	// already indicates this). We do this for consistency with the next_sync
-	// property.
-	loc, _ := time.LoadLocation("UTC")
-	t, err := time.ParseInLocation(StandardAPITimeLayout, value, loc)
+	t, err := parseDate(value)
 	if err != nil {
 		return err
 	}
@@ -125,14 +170,7 @@ func (dt *SyncTime) UnmarshalJSON(data []byte) error {
 		return nil
 	}
 
-	// Parse time, forcing the location to UTC. We do this to match the same
-	// timezone used in other time properties.
-	//
-	// Example of the next_sync JSON property & value:
-	//
-	// "next_sync": "2022/03/28 20:05:00 +0000"
-	loc, _ := time.LoadLocation("UTC")
-	t, err := time.ParseInLocation(SyncTimeLayout, value, loc)
+	t, err := parseDate(value)
 	if err != nil {
 		return err
 	}
@@ -140,4 +178,28 @@ func (dt *SyncTime) UnmarshalJSON(data []byte) error {
 	*dt = SyncTime(t) // set result using the pointer
 
 	return nil
+}
+
+// parseDate is a helper function that attempts to handle all known datetime
+// formats for legacy and current Red Hat Satellite APIs. An error is returned
+// if the given datetime string does not match a known layout.
+func parseDate(datetime string) (time.Time, error) {
+	knownLayouts := []string{
+		StandardAPITimeLayoutWithTimezone,
+		StandardAPITimeLayoutWithOffset,
+		SyncTimeLayoutWithTimezone,
+		SyncTimeLayoutWithOffset,
+		LegacySyncTimeLayout,
+	}
+
+	var result time.Time
+	var err error
+	for _, layout := range knownLayouts {
+		result, err = time.Parse(layout, datetime)
+		if err == nil {
+			return result, nil
+		}
+	}
+
+	return time.Time{}, err
 }
