@@ -25,15 +25,35 @@ const syncTimeGraceMinutes float64 = 5
 
 // SyncPlansResponse represents the API response from a request of all sync
 // plans for a specific organization.
+//
+// https://access.redhat.com/documentation/en-us/red_hat_satellite/6.5/html-single/api_guide/index#sect-API_Guide-Understanding_the_JSON_Response_Format
+// https://access.redhat.com/documentation/en-us/red_hat_satellite/6.15/html-single/api_guide/index#sect-API_Guide-Understanding_the_JSON_Response_Format
 type SyncPlansResponse struct {
-	Error     NullString  `json:"error"`
-	Search    NullString  `json:"search"`
-	SyncPlans SyncPlans   `json:"results"`
-	Sort      SortOptions `json:"sort"`
-	Subtotal  int         `json:"subtotal"`
-	Total     int         `json:"total"`
-	Page      int         `json:"page"`
-	PerPage   int         `json:"per_page"`
+	Error NullString `json:"error"`
+
+	// Search is the search string based on scoped_scoped syntax.
+	Search NullString `json:"search"`
+
+	// SyncPlans is the collection of Sync Plans returned in the API query
+	// response.
+	SyncPlans SyncPlans `json:"results"`
+
+	// Sort is the optional sorting criteria for API query responses.
+	Sort SortOptions `json:"sort"`
+
+	// Subtotal is the number of objects returned with the given search
+	// parameters. If there is no search, then subtotal is equal to total.
+	Subtotal int `json:"subtotal"`
+
+	// Total is the total number of objects without any search parameters.
+	Total int `json:"total"`
+
+	// Page is the page number for the current query response results.
+	Page int `json:"page"`
+
+	// PerPage is the pagination limit applied to API query results. If not
+	// specified by the client this is the default value set by the API.
+	PerPage int `json:"per_page"`
 }
 
 // SyncPlan represents a Red Hat Satellite sync plan. Sync plans are used to
@@ -381,6 +401,8 @@ func (sps SyncPlans) Stuck() SyncPlans {
 
 // getOrgSyncPlans retrieves all sync plans for the given organization.
 func getOrgSyncPlans(ctx context.Context, client *APIClient, org Organization) (SyncPlans, error) {
+	funcTimeStart := time.Now()
+
 	subLogger := client.Logger.With().
 		Int("org_id", org.ID).
 		Str("org_name", org.Name).
@@ -391,60 +413,79 @@ func getOrgSyncPlans(ctx context.Context, client *APIClient, org Organization) (
 		client.AuthInfo.Server,
 		client.AuthInfo.Port,
 		org.ID,
-		client.Limits.PerPage,
 	)
 
-	subLogger.Debug().Msg("Preparing request to retrieve sync plans")
-	request, reqErr := prepareRequest(ctx, client, apiURL)
-	if reqErr != nil {
-		return nil, reqErr
-	}
+	allSyncPlans := make(SyncPlans, 0, client.Limits.PerPage*2)
 
-	subLogger.Debug().Msg("Submitting HTTP request")
-	response, respErr := client.Do(request)
-	if respErr != nil {
-		return nil, respErr
-	}
-	subLogger.Debug().Msg("Successfully submitted HTTP request")
+	apiURLQueryParams := make(map[string]string)
+	apiURLQueryParams[APIEndpointURLQueryParamFullResultKey] = APIEndpointURLQueryParamFullResultDefaultValue
+	apiURLQueryParams[APIEndpointURLQueryParamPerPageKey] = strconv.Itoa(client.Limits.PerPage)
 
-	// Make sure that we close the response body once we're done with it
-	defer func() {
-		if closeErr := response.Body.Close(); closeErr != nil {
-			subLogger.Error().Err(closeErr).Msg("error closing response body")
+	var nextPage int
+	for {
+		nextPage++
+		apiURLQueryParams[APIEndpointURLQueryParamPageKey] = strconv.Itoa(nextPage)
+
+		response, respErr := submitAPIQueryRequest(ctx, client, apiURL, apiURLQueryParams, subLogger)
+		if respErr != nil {
+			return nil, respErr
 		}
-	}()
 
-	// Evaluate the response
-	validateErr := validateResponse(ctx, response, subLogger, client.AuthInfo.ReadLimit)
-	if validateErr != nil {
-		return nil, validateErr
-	}
+		subLogger.Debug().Msgf(
+			"Decoding JSON data from %q using a limit of %d bytes",
+			apiURL,
+			client.AuthInfo.ReadLimit,
+		)
 
-	subLogger.Debug().Msg("Successfully validated HTTP response")
+		var syncPlansQueryResp SyncPlansResponse
+		decodeErr := decode(&syncPlansQueryResp, response.Body, subLogger, apiURL, client.AuthInfo.ReadLimit)
+		if decodeErr != nil {
+			return nil, decodeErr
+		}
 
-	subLogger.Debug().Msgf(
-		"Decoding JSON data from %q using a limit of %d bytes",
-		apiURL,
-		client.AuthInfo.ReadLimit,
-	)
+		// Annotate Sync Plans with specific Org values for convenience.
+		for i := range syncPlansQueryResp.SyncPlans {
+			syncPlansQueryResp.SyncPlans[i].OrganizationName = org.Name
+			syncPlansQueryResp.SyncPlans[i].OrganizationLabel = org.Label
+			syncPlansQueryResp.SyncPlans[i].OrganizationTitle = org.Title
+		}
 
-	var syncPlansQueryResp SyncPlansResponse
-	decodeErr := decode(&syncPlansQueryResp, response.Body, subLogger, apiURL, client.AuthInfo.ReadLimit)
-	if decodeErr != nil {
-		return nil, decodeErr
-	}
+		subLogger.Debug().
+			Str("api_endpoint", apiURL).
+			Msg("Successfully decoded JSON data")
 
-	// Annotate Sync Plans with specific Org values for convenience.
-	for i := range syncPlansQueryResp.SyncPlans {
-		syncPlansQueryResp.SyncPlans[i].OrganizationName = org.Name
-		syncPlansQueryResp.SyncPlans[i].OrganizationLabel = org.Label
-		syncPlansQueryResp.SyncPlans[i].OrganizationTitle = org.Title
+		numNewSyncPlans := len(syncPlansQueryResp.SyncPlans)
+		numCollectedSyncPlans := len(allSyncPlans)
+		numSyncPlansRemaining := syncPlansQueryResp.Subtotal - numCollectedSyncPlans
+
+		allSyncPlans = append(allSyncPlans, syncPlansQueryResp.SyncPlans...)
+
+		subLogger.Debug().
+			Str("api_endpoint", apiURL).
+			Int("sync_plans_collected", numCollectedSyncPlans).
+			Int("sync_plans_new", numNewSyncPlans).
+			Msg("Added decoded sync plans to collection")
+
+		subLogger.Debug().
+			Msg("Determining if we have collected all sync plans from the API")
+
+		if numSyncPlansRemaining == 0 {
+			subLogger.Debug().
+				Msg("We have collected all sync plans from the API")
+			break
+		}
+
+		subLogger.Debug().
+			Int("sync_plans_collected", numCollectedSyncPlans).
+			Int("sync_plans_remaining", numSyncPlansRemaining).
+			Msg("We have more sync plans to collect from the API")
 	}
 
 	subLogger.Debug().
-		Str("api_endpoint", apiURL).
-		Msg("Successfully decoded JSON data")
+		Str("runtime_total", time.Since(funcTimeStart).String()).
+		Msg("Completed retrieval of all sync plans for organization")
 
-	return syncPlansQueryResp.SyncPlans, nil
+	// return syncPlansQueryResp.SyncPlans, nil
+	return allSyncPlans, nil
 
 }
