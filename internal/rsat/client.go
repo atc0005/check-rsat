@@ -17,12 +17,19 @@ import (
 	"github.com/rs/zerolog"
 )
 
+// APILimits represents the settings used to comply with the limits set by an
+// API endpoint.
+type APILimits struct {
+	PerPage int
+}
+
 // APIClient represents a customized HTTP client for interacting with Red
 // Hat Satellite API endpoints.
 type APIClient struct {
 	*http.Client
 	AuthInfo APIAuthInfo
 	Logger   zerolog.Logger
+	Limits   APILimits
 	// APIResponseCache CachedAPIResponses
 }
 
@@ -71,7 +78,7 @@ func getCustomTLSConfig(apiAuthInfo APIAuthInfo) *tls.Config {
 
 // NewAPIClient uses the provided API Auth details to construct a custom HTTP
 // client used to interact with
-func NewAPIClient(apiAuthInfo APIAuthInfo, logger zerolog.Logger) *APIClient {
+func NewAPIClient(apiAuthInfo APIAuthInfo, apiLimits APILimits, logger zerolog.Logger) *APIClient {
 	tlsConfig := getCustomTLSConfig(apiAuthInfo)
 
 	transport := &http.Transport{
@@ -92,5 +99,6 @@ func NewAPIClient(apiAuthInfo APIAuthInfo, logger zerolog.Logger) *APIClient {
 		Client:   c,
 		AuthInfo: apiAuthInfo,
 		Logger:   logger,
+		Limits:   apiLimits,
 	}
 }
