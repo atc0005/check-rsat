@@ -26,6 +26,20 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.1.10] - 2024-05-25
+
+### Changed
+
+#### Dependency Updates
+
+- (GH-239) Build Image: Bump atc0005/go-ci from go-ci-oldstable-build-v0.20.4 to go-ci-oldstable-build-v0.20.5 in /dependabot/docker/builds
+- (GH-244) Go Dependency: Bump github.com/rs/zerolog from 1.32.0 to 1.33.0
+- (GH-242) Go Dependency: Bump zgo.at/termtext from 1.4.0 to 1.5.0
+
+### Fixed
+
+- (GH-249) Increase default per-page API results limit
+
 ## [v0.1.9] - 2024-05-11
 
 ### Changed
@@ -209,7 +223,8 @@ Satellite (RSAT) instances. This evaluation is performed using official APIs.
 Just to be 100% clear: this project is not affiliated with or
 endorsed by  Red Hat, Inc.
 
-[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.9...HEAD
+[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.10...HEAD
+[v0.1.10]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.10
 [v0.1.9]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.9
 [v0.1.8]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.8
 [v0.1.7]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.7
