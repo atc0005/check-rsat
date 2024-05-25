@@ -26,22 +26,40 @@ const (
 	// OrganizationsAPIEndPointURLTemplate provides a template for a fully
 	// qualified API endpoint URL for retrieving Organizations from a Red Hat
 	// Satellite instance.
-	OrganizationsAPIEndPointURLTemplate string = "https://%s:%d/api/v2/organizations?full_result=1&per_page=%d"
+	// OrganizationsAPIEndPointURLTemplate string = "https://%s:%d/api/v2/organizations?full_result=1&per_page=%d&page=%d"
+	OrganizationsAPIEndPointURLTemplate string = "https://%s:%d/api/v2/organizations"
 
 	// SubscriptionsAPIEndPointURLTemplate provides a template for a fully
 	// qualified API endpoint URL for retrieving Subscriptions associated with
 	// a Red Hat Satellite Organization.
-	SubscriptionsAPIEndPointURLTemplate string = "https://%s:%d/katello/api/v2/organizations/%d/subscriptions?full_result=1&per_page=%d"
+	// SubscriptionsAPIEndPointURLTemplate string = "https://%s:%d/katello/api/v2/organizations/%d/subscriptions?full_result=1&per_page=%d&page=%d"
+	SubscriptionsAPIEndPointURLTemplate string = "https://%s:%d/katello/api/v2/organizations/%d/subscriptions"
 
 	// SyncPlansAPIEndPointURLTemplate provides a template for a fully
 	// qualified API endpoint URL for retrieving Sync Plans associated with a
 	// Red Hat Satellite Organization.
-	SyncPlansAPIEndPointURLTemplate string = "https://%s:%d/katello/api/v2/organizations/%d/sync_plans?full_result=1&per_page=%d"
+	// SyncPlansAPIEndPointURLTemplate string = "https://%s:%d/katello/api/v2/organizations/%d/sync_plans?full_result=1&per_page=%d&page=%d"
+	SyncPlansAPIEndPointURLTemplate string = "https://%s:%d/katello/api/v2/organizations/%d/sync_plans"
 
 	// ProductsAPIEndPointURLTemplate provides a template for a fully
 	// qualified API endpoint URL for retrieving Products associated with a
 	// Red Hat Satellite Organization.
-	ProductsAPIEndPointURLTemplate string = "https://%s:%d/katello/api/v2/products?organization_id=%d&full_result=1&per_page=%d"
+	// ProductsAPIEndPointURLTemplate string = "https://%s:%d/katello/api/v2/products?organization_id=%d&full_result=1&per_page=%d&page=%d"
+	ProductsAPIEndPointURLTemplate string = "https://%s:%d/katello/api/v2/products"
+)
+
+// Common/shared query parameter keys for Red Hat Satellite API endpoint URLs.
+const (
+	APIEndpointURLQueryParamOrganizationIDKey string = "organization_id"
+	APIEndpointURLQueryParamFullResultKey     string = "full_result"
+	APIEndpointURLQueryParamPerPageKey        string = "per_page"
+	APIEndpointURLQueryParamPageKey           string = "page"
+)
+
+// Red Hat Satellite API endpoint URL query parameter default values.
+const (
+	APIEndpointURLQueryParamFullResultDefaultValue string = "1"
+	APIEndpointURLQueryParamPageStartingValue      string = "1"
 )
 
 // Prep tasks for processing of Red Hat Satellite API endpoints.
@@ -52,6 +70,16 @@ const (
 	PrepTaskSubmitRequest    string = "submit request"
 	PrepTaskValidateResponse string = "validate response"
 )
+
+// APIURLQueryParams is the collection of key/value pairs required for queries
+// to API endpoints.
+//
+// TODO: Implement this to provide better validation of required query
+// parameters (e.g., enforce per_page presence).
+//
+// type APIURLQueryParams struct {
+// 	Values map[string]string
+// }
 
 // APIAuthInfo represents the settings needed to access Red Hat Satellite
 // server API endpoints.
@@ -97,8 +125,15 @@ type APIAuthInfo struct {
 }
 
 // SortOptions is the optional sorting criteria for API query responses.
+//
+// https://access.redhat.com/documentation/en-us/red_hat_satellite/6.5/html-single/api_guide/index#sect-API_Guide-Understanding_the_JSON_Response_Format
+// https://access.redhat.com/documentation/en-us/red_hat_satellite/6.15/html-single/api_guide/index#sect-API_Guide-Understanding_the_JSON_Response_Format
 type SortOptions struct {
-	By    NullString `json:"by"`
+	// By specifies by what field the API sorts the collection.
+	By NullString `json:"by"`
+
+	// Order is the sort order, either ASC for ascending or DESC for
+	// descending.
 	Order NullString `json:"order"`
 }
 
@@ -256,7 +291,7 @@ func validateResponse(ctx context.Context, response *http.Response, logger zerol
 
 // prepareRequest is a helper function that prepares a http.Request (including
 // all desired headers) for submission to an endpoint.
-func prepareRequest(ctx context.Context, client *APIClient, apiURL string) (*http.Request, error) {
+func prepareRequest(ctx context.Context, client *APIClient, apiURL string, apiURLQueryParams map[string]string) (*http.Request, error) {
 	if client == nil {
 		return nil, &PrepError{
 			Task:    PrepTaskPrepareRequest,
@@ -281,6 +316,24 @@ func prepareRequest(ctx context.Context, client *APIClient, apiURL string) (*htt
 		}
 	}
 
+	// We require at least the per_page setting.
+	//
+	// TODO: Move this into a separate Validate method for the
+	// APIURLQueryParams type so that we can apply multiple validations in one
+	// place (e.g., require per_page setting to be present, value values for
+	// it and other query parameters).
+	if len(apiURLQueryParams) < 1 {
+		return nil, &PrepError{
+			Task:    PrepTaskPrepareRequest,
+			Message: "error preparing HTTP request",
+			Source:  apiURL,
+			Cause: fmt.Errorf(
+				"required number of API URL query parameters were not provided: %w",
+				ErrMissingValue,
+			),
+		}
+	}
+
 	logger := client.Logger
 
 	logger.Debug().Msgf("Parsing %q as URL", apiURL)
@@ -294,6 +347,12 @@ func prepareRequest(ctx context.Context, client *APIClient, apiURL string) (*htt
 		}
 	}
 	logger.Debug().Msgf("Successfully parsed %q as URL", apiURL)
+
+	queryParams := parsedURL.Query()
+	for k, v := range apiURLQueryParams {
+		queryParams.Set(k, v)
+	}
+	parsedURL.RawQuery = queryParams.Encode()
 
 	logger.Debug().Msg("Preparing HTTP request")
 	request, reqErr := http.NewRequestWithContext(ctx, http.MethodGet, parsedURL.String(), nil)
