@@ -26,12 +26,12 @@ const (
 	// OrganizationsAPIEndPointURLTemplate provides a template for a fully
 	// qualified API endpoint URL for retrieving Organizations from a Red Hat
 	// Satellite instance.
-	OrganizationsAPIEndPointURLTemplate string = "https://%s:%d/api/v2/organizations?full_result=1"
+	OrganizationsAPIEndPointURLTemplate string = "https://%s:%d/api/v2/organizations?full_result=1&per_page=%d"
 
 	// SubscriptionsAPIEndPointURLTemplate provides a template for a fully
 	// qualified API endpoint URL for retrieving Subscriptions associated with
 	// a Red Hat Satellite Organization.
-	SubscriptionsAPIEndPointURLTemplate string = "https://%s:%d/katello/api/v2/organizations/%d/subscriptions?full_result=1"
+	SubscriptionsAPIEndPointURLTemplate string = "https://%s:%d/katello/api/v2/organizations/%d/subscriptions?full_result=1&per_page=%d"
 
 	// SyncPlansAPIEndPointURLTemplate provides a template for a fully
 	// qualified API endpoint URL for retrieving Sync Plans associated with a
@@ -41,7 +41,7 @@ const (
 	// ProductsAPIEndPointURLTemplate provides a template for a fully
 	// qualified API endpoint URL for retrieving Products associated with a
 	// Red Hat Satellite Organization.
-	ProductsAPIEndPointURLTemplate string = "https://%s:%d/katello/api/v2/products?organization_id=%d&full_result=1"
+	ProductsAPIEndPointURLTemplate string = "https://%s:%d/katello/api/v2/products?organization_id=%d&full_result=1&per_page=%d"
 )
 
 // Prep tasks for processing of Red Hat Satellite API endpoints.

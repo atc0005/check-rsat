@@ -64,6 +64,7 @@ func GetOrganizations(ctx context.Context, client *APIClient) ([]Organization, e
 		OrganizationsAPIEndPointURLTemplate,
 		client.AuthInfo.Server,
 		client.AuthInfo.Port,
+		client.Limits.PerPage,
 	)
 
 	request, err := prepareRequest(ctx, client, apiURL)
