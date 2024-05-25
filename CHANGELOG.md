@@ -26,6 +26,12 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.1.11] - 2024-05-25
+
+### Fixed
+
+- (GH-260) Initial API query results paging support
+
 ## [v0.1.10] - 2024-05-25
 
 ### Changed
@@ -223,7 +229,8 @@ Satellite (RSAT) instances. This evaluation is performed using official APIs.
 Just to be 100% clear: this project is not affiliated with or
 endorsed by  Red Hat, Inc.
 
-[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.10...HEAD
+[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.11...HEAD
+[v0.1.11]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.11
 [v0.1.10]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.10
 [v0.1.9]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.9
 [v0.1.8]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.8
