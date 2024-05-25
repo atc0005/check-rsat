@@ -112,12 +112,7 @@ func GetOrganizations(ctx context.Context, client *APIClient) ([]Organization, e
 			apiURL,
 			client.AuthInfo.ReadLimit,
 		)
-		// Make sure that we close the response body once we're done with it
-		defer func() {
-			if closeErr := response.Body.Close(); closeErr != nil {
-				logger.Error().Err(closeErr).Msg("error closing response body")
-			}
-		}()
+
 		var orgsQueryResp OrganizationsResponse
 		decodeErr := decode(&orgsQueryResp, response.Body, logger, apiURL, client.AuthInfo.ReadLimit)
 		if decodeErr != nil {
@@ -127,6 +122,14 @@ func GetOrganizations(ctx context.Context, client *APIClient) ([]Organization, e
 		logger.Debug().
 			Str("api_endpoint", apiURL).
 			Msg("Successfully decoded JSON data")
+
+		// Close the response body once we're done with it. We explicitly
+		// close here vs deferring via closure to prevent accumulating client
+		// connections to the API if we need to perform multiple paged
+		// requests.
+		if closeErr := response.Body.Close(); closeErr != nil {
+			logger.Error().Err(closeErr).Msg("error closing response body")
+		}
 
 		numNewOrgs := len(orgsQueryResp.Organizations)
 		numCollectedOrgs := len(allOrgs)

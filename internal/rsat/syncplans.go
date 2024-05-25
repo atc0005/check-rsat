@@ -436,13 +436,6 @@ func getOrgSyncPlans(ctx context.Context, client *APIClient, org Organization) (
 			return nil, respErr
 		}
 
-		// Make sure that we close the response body once we're done with it
-		defer func() {
-			if closeErr := response.Body.Close(); closeErr != nil {
-				subLogger.Error().Err(closeErr).Msg("error closing response body")
-			}
-		}()
-
 		subLogger.Debug().Msgf(
 			"Decoding JSON data from %q using a limit of %d bytes",
 			apiURL,
@@ -455,16 +448,24 @@ func getOrgSyncPlans(ctx context.Context, client *APIClient, org Organization) (
 			return nil, decodeErr
 		}
 
+		subLogger.Debug().
+			Str("api_endpoint", apiURL).
+			Msg("Successfully decoded JSON data")
+
+		// Close the response body once we're done with it. We explicitly
+		// close here vs deferring via closure to prevent accumulating client
+		// connections to the API if we need to perform multiple paged
+		// requests.
+		if closeErr := response.Body.Close(); closeErr != nil {
+			subLogger.Error().Err(closeErr).Msg("error closing response body")
+		}
+
 		// Annotate Sync Plans with specific Org values for convenience.
 		for i := range syncPlansQueryResp.SyncPlans {
 			syncPlansQueryResp.SyncPlans[i].OrganizationName = org.Name
 			syncPlansQueryResp.SyncPlans[i].OrganizationLabel = org.Label
 			syncPlansQueryResp.SyncPlans[i].OrganizationTitle = org.Title
 		}
-
-		subLogger.Debug().
-			Str("api_endpoint", apiURL).
-			Msg("Successfully decoded JSON data")
 
 		numNewSyncPlans := len(syncPlansQueryResp.SyncPlans)
 		numCollectedSyncPlans := len(allSyncPlans)
