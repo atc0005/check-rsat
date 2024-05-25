@@ -129,13 +129,6 @@ func submitAPIQueryRequest(
 	}
 	logger.Debug().Msg("Successfully submitted HTTP request")
 
-	// Make sure that we close the response body once we're done with it
-	defer func() {
-		if closeErr := response.Body.Close(); closeErr != nil {
-			logger.Error().Err(closeErr).Msg("error closing response body")
-		}
-	}()
-
 	// Evaluate the response
 	validateErr := validateResponse(ctx, response, logger, client.AuthInfo.ReadLimit)
 	if validateErr != nil {
