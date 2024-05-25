@@ -422,7 +422,12 @@ func getOrgSyncPlans(ctx context.Context, client *APIClient, org Organization) (
 	apiURLQueryParams[APIEndpointURLQueryParamPerPageKey] = strconv.Itoa(client.Limits.PerPage)
 
 	var nextPage int
-	for {
+	remainingSyncPlans := true
+
+	for remainingSyncPlans {
+		subLogger.Debug().
+			Msg("Collecting sync plans from the API")
+
 		nextPage++
 		apiURLQueryParams[APIEndpointURLQueryParamPageKey] = strconv.Itoa(nextPage)
 
@@ -430,6 +435,13 @@ func getOrgSyncPlans(ctx context.Context, client *APIClient, org Organization) (
 		if respErr != nil {
 			return nil, respErr
 		}
+
+		// Make sure that we close the response body once we're done with it
+		defer func() {
+			if closeErr := response.Body.Close(); closeErr != nil {
+				subLogger.Error().Err(closeErr).Msg("error closing response body")
+			}
+		}()
 
 		subLogger.Debug().Msgf(
 			"Decoding JSON data from %q using a limit of %d bytes",
@@ -464,28 +476,19 @@ func getOrgSyncPlans(ctx context.Context, client *APIClient, org Organization) (
 			Str("api_endpoint", apiURL).
 			Int("sync_plans_collected", numCollectedSyncPlans).
 			Int("sync_plans_new", numNewSyncPlans).
+			Int("sync_plans_remaining", numSyncPlansRemaining).
 			Msg("Added decoded sync plans to collection")
 
 		subLogger.Debug().
 			Msg("Determining if we have collected all sync plans from the API")
 
-		if numSyncPlansRemaining == 0 {
-			subLogger.Debug().
-				Msg("We have collected all sync plans from the API")
-			break
-		}
-
-		subLogger.Debug().
-			Int("sync_plans_collected", numCollectedSyncPlans).
-			Int("sync_plans_remaining", numSyncPlansRemaining).
-			Msg("We have more sync plans to collect from the API")
+		remainingSyncPlans = numSyncPlansRemaining != 0
 	}
 
 	subLogger.Debug().
 		Str("runtime_total", time.Since(funcTimeStart).String()).
 		Msg("Completed retrieval of all sync plans for organization")
 
-	// return syncPlansQueryResp.SyncPlans, nil
 	return allSyncPlans, nil
 
 }

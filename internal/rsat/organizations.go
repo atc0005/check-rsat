@@ -93,7 +93,12 @@ func GetOrganizations(ctx context.Context, client *APIClient) ([]Organization, e
 	apiURLQueryParams[APIEndpointURLQueryParamPerPageKey] = strconv.Itoa(client.Limits.PerPage)
 
 	var nextPage int
-	for {
+	remainingOrgs := true
+
+	for remainingOrgs {
+		logger.Debug().
+			Msg("Collecting organizations from the API")
+
 		nextPage++
 		apiURLQueryParams[APIEndpointURLQueryParamPageKey] = strconv.Itoa(nextPage)
 
@@ -107,7 +112,12 @@ func GetOrganizations(ctx context.Context, client *APIClient) ([]Organization, e
 			apiURL,
 			client.AuthInfo.ReadLimit,
 		)
-
+		// Make sure that we close the response body once we're done with it
+		defer func() {
+			if closeErr := response.Body.Close(); closeErr != nil {
+				logger.Error().Err(closeErr).Msg("error closing response body")
+			}
+		}()
 		var orgsQueryResp OrganizationsResponse
 		decodeErr := decode(&orgsQueryResp, response.Body, logger, apiURL, client.AuthInfo.ReadLimit)
 		if decodeErr != nil {
@@ -126,20 +136,13 @@ func GetOrganizations(ctx context.Context, client *APIClient) ([]Organization, e
 			Str("api_endpoint", apiURL).
 			Int("orgs_collected", numCollectedOrgs).
 			Int("orgs_new", numNewOrgs).
+			Int("orgs_remaining", numOrgsRemaining).
 			Msg("Added decoded organizations to collection")
 
 		logger.Debug().
 			Msg("Determining if we have collected all organizations from the API")
 
-		if numOrgsRemaining == 0 {
-			logger.Debug().
-				Msg("We have collected all organizations from the API")
-			break
-		}
-		logger.Debug().
-			Int("orgs_collected", numCollectedOrgs).
-			Int("orgs_remaining", numOrgsRemaining).
-			Msg("We have more organizations to collect from the API")
+		remainingOrgs = numOrgsRemaining != 0
 	}
 
 	logger.Debug().
