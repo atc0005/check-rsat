@@ -9,6 +9,7 @@ package rsat
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"math"
 	"strconv"
@@ -49,7 +50,12 @@ type SyncPlansResponse struct {
 	Total int `json:"total"`
 
 	// Page is the page number for the current query response results.
-	Page int `json:"page"`
+	//
+	// NOTE: In practice, this value has been found to be  returned as an
+	// integer in the first response and as a string value for each additional
+	// page of results. The json.Number type accepts either format when
+	// decoding the response.
+	Page json.Number `json:"page"`
 
 	// PerPage is the pagination limit applied to API query results. If not
 	// specified by the client this is the default value set by the API.
@@ -467,11 +473,11 @@ func getOrgSyncPlans(ctx context.Context, client *APIClient, org Organization) (
 			syncPlansQueryResp.SyncPlans[i].OrganizationTitle = org.Title
 		}
 
+		allSyncPlans = append(allSyncPlans, syncPlansQueryResp.SyncPlans...)
+
 		numNewSyncPlans := len(syncPlansQueryResp.SyncPlans)
 		numCollectedSyncPlans := len(allSyncPlans)
 		numSyncPlansRemaining := syncPlansQueryResp.Subtotal - numCollectedSyncPlans
-
-		allSyncPlans = append(allSyncPlans, syncPlansQueryResp.SyncPlans...)
 
 		subLogger.Debug().
 			Str("api_endpoint", apiURL).

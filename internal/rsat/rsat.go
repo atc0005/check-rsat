@@ -14,6 +14,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"os"
 
 	"github.com/rs/zerolog"
 )
@@ -157,7 +158,17 @@ func decode(dst interface{}, reader io.Reader, logger zerolog.Logger, sourceName
 		sourceName,
 		limit,
 	)
-	dec := json.NewDecoder(io.LimitReader(reader, limit))
+
+	limitReader := io.LimitReader(reader, limit)
+
+	// If debug or greater logging is enabled write the JSON payload in the
+	// response as-is to stderr for review.
+	if zerolog.GlobalLevel() == zerolog.DebugLevel ||
+		zerolog.GlobalLevel() == zerolog.TraceLevel {
+		limitReader = io.TeeReader(io.LimitReader(reader, limit), os.Stderr)
+	}
+
+	dec := json.NewDecoder(limitReader)
 
 	// This project does not use all fields from Red Hat Satellite API
 	// responses so we do not attempt to assert that we've accounted for all

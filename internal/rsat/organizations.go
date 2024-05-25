@@ -9,6 +9,7 @@ package rsat
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"sort"
 	"strconv"
@@ -41,7 +42,12 @@ type OrganizationsResponse struct {
 	Total int `json:"total"`
 
 	// Page is the page number for the current query response results.
-	Page int `json:"page"`
+	//
+	// NOTE: In practice, this value has been found to be  returned as an
+	// integer in the first response and as a string value for each additional
+	// page of results. The json.Number type accepts either format when
+	// decoding the response.
+	Page json.Number `json:"page"`
 
 	// PerPage is the pagination limit applied to API query results. If not
 	// specified by the client this is the default value set by the API.
@@ -130,6 +136,8 @@ func GetOrganizations(ctx context.Context, client *APIClient) ([]Organization, e
 		if closeErr := response.Body.Close(); closeErr != nil {
 			logger.Error().Err(closeErr).Msg("error closing response body")
 		}
+
+		allOrgs = append(allOrgs, orgsQueryResp.Organizations...)
 
 		numNewOrgs := len(orgsQueryResp.Organizations)
 		numCollectedOrgs := len(allOrgs)
