@@ -71,6 +71,7 @@ func (c *Config) handleFlagsConfig(appType AppType) error {
 	c.flagSet.BoolVar(&c.PermitTLSRenegotiation, PermitTLSRenegotiationFlagLong, defaultPermitTLSRenegotiation, permitTLSRenegotiationFlagHelp)
 	c.flagSet.StringVar(&c.CACertificate, CACertificateFlagLong, defaultCACertificate, caCertificateFlagHelp)
 	c.flagSet.Int64Var(&c.ReadLimit, ReadLimitFlagLong, defaultReadLimit, readLimitFlagHelp)
+	c.flagSet.IntVar(&c.PerPageLimit, PerPageLimitFlagLong, defaultPerPageLimit, perPageLimitFlagHelp)
 
 	switch {
 	case appType.Inspector:

@@ -55,6 +55,13 @@ func (c Config) validate(appType AppType) error {
 			ErrUnsupportedOption,
 		)
 
+	case c.PerPageLimit <= 0:
+		return fmt.Errorf(
+			"invalid per-page limit value %d provided: %w",
+			c.PerPageLimit,
+			ErrUnsupportedOption,
+		)
+
 	case c.ReadLimit <= 0:
 		return fmt.Errorf(
 			"invalid read limit value %d provided: %w",
