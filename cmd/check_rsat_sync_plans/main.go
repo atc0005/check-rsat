@@ -129,7 +129,11 @@ func main() {
 		CACert:                 caCert,
 	}
 
-	client := rsat.NewAPIClient(authInfo, logger)
+	apiLimits := rsat.APILimits{
+		PerPage: cfg.PerPageLimit,
+	}
+
+	client := rsat.NewAPIClient(authInfo, apiLimits, logger)
 
 	orgs, orgsFetchErr := rsat.GetOrgsWithSyncPlans(ctx, client)
 	if orgsFetchErr != nil {
