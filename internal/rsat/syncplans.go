@@ -391,6 +391,7 @@ func getOrgSyncPlans(ctx context.Context, client *APIClient, org Organization) (
 		client.AuthInfo.Server,
 		client.AuthInfo.Port,
 		org.ID,
+		client.Limits.PerPage,
 	)
 
 	subLogger.Debug().Msg("Preparing request to retrieve sync plans")

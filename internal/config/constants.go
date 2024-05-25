@@ -27,6 +27,7 @@ const (
 	passwordFlagHelp               string = "The valid password for the specified user." //nolint:gosec
 	tcpPortFlagHelp                string = "The port used by the Red Hat Satellite server API."
 	networkTypeFlagHelp            string = "Limits network connections to one of tcp4 (IPv4-only), tcp6 (IPv6-only) or auto (either)."
+	perPageLimitFlagHelp           string = "Overrides the default pagination limit for API calls. Satellite API defaults to a per-page limit of 20 results, our default is higher."
 	caCertificateFlagHelp          string = "CA Certificate used to validate the certificate chain used by the Red Hat Satellite server."
 	permitTLSRenegotiationFlagHelp string = "Whether support for accepting renegotiation requests from the Red Hat Satellite server are permitted. This support is disabled by default. Renegotiation is not supported for TLS 1.3."
 	omitOKSyncPlansHelp            string = "Whether sync plans listed in plugin output should be limited to just those in a non-OK state."
@@ -61,6 +62,7 @@ const (
 	TimeoutFlagLong                string = "timeout"
 	TimeoutFlagShort               string = "t"
 	ReadLimitFlagLong              string = "read-limit"
+	PerPageLimitFlagLong           string = "page-limit"
 	LogLevelFlagLong               string = "log-level"
 	LogLevelFlagShort              string = "ll"
 	ServerFlagLong                 string = "server"
@@ -103,6 +105,18 @@ const (
 	// input. The limit set here is OVERLY generous and is unlikely to be met
 	// unless something is broken.
 	defaultReadLimit int64 = 1 * MB
+
+	// defaultPerPageLimit is set higher than the default API pagination limit
+	// of 20 results per-page in an effort to support most Red Hat Satellite
+	// instances "out of the box".
+	//
+	// TODO: Having this value meet or exceed the number of organizations in a
+	// Red Hat Satellite instance will be less important once GH-245 is
+	// implemented and paging support is used. At that point we can reduce
+	// this number closer to the default API limit to reduce the risk of
+	// encountering API timeouts (e.g., for slower or more heavily loaded
+	// instances).
+	defaultPerPageLimit int = 50
 
 	defaultInspectorOutputFormat string = InspectorOutputFormatPrettyTable
 )

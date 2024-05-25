@@ -77,7 +77,11 @@ func main() {
 		return
 	}
 
-	client := rsat.NewAPIClient(authInfo, logger)
+	apiLimits := rsat.APILimits{
+		PerPage: cfg.PerPageLimit,
+	}
+
+	client := rsat.NewAPIClient(authInfo, apiLimits, logger)
 
 	logger.Info().
 		Str("timeout", cfg.Timeout().String()).

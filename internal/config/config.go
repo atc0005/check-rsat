@@ -106,6 +106,14 @@ type Config struct {
 	// generous and is unlikely to be met unless something is broken.
 	ReadLimit int64
 
+	// PerPageLimit overrides the default pagination limit for API calls. If
+	// not specified by the client the remote API uses a per-page default
+	// value of 20 results. Our goal is to have our default higher than this
+	// in order to support most Red Hat Satellite instances "out of the box".
+	//
+	// TODO: This will be less important once GH-245 is implemented.
+	PerPageLimit int
+
 	// Log is an embedded zerolog Logger initialized via config.New().
 	Log zerolog.Logger
 

@@ -36,7 +36,7 @@ const (
 	// SyncPlansAPIEndPointURLTemplate provides a template for a fully
 	// qualified API endpoint URL for retrieving Sync Plans associated with a
 	// Red Hat Satellite Organization.
-	SyncPlansAPIEndPointURLTemplate string = "https://%s:%d/katello/api/v2/organizations/%d/sync_plans?full_result=1"
+	SyncPlansAPIEndPointURLTemplate string = "https://%s:%d/katello/api/v2/organizations/%d/sync_plans?full_result=1&per_page=%d"
 
 	// ProductsAPIEndPointURLTemplate provides a template for a fully
 	// qualified API endpoint URL for retrieving Products associated with a
