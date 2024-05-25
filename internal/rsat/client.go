@@ -8,6 +8,7 @@
 package rsat
 
 import (
+	"context"
 	"crypto/tls"
 	"crypto/x509"
 	"net/http"
@@ -101,4 +102,40 @@ func NewAPIClient(apiAuthInfo APIAuthInfo, apiLimits APILimits, logger zerolog.L
 		Logger:   logger,
 		Limits:   apiLimits,
 	}
+}
+
+// submitAPIQueryRequest is a helper function used to submit a request to an
+// API endpoint and perform basic validation of the results.
+//
+// TODO: Refactor to be an APIClient method
+func submitAPIQueryRequest(
+	ctx context.Context,
+	client *APIClient,
+	apiURL string,
+	apiURLQueryParams map[string]string,
+	logger zerolog.Logger,
+) (*http.Response, error) {
+
+	logger.Debug().Msg("Preparing request for API query")
+	request, reqErr := prepareRequest(ctx, client, apiURL, apiURLQueryParams)
+	if reqErr != nil {
+		return nil, reqErr
+	}
+
+	logger.Debug().Msg("Submitting HTTP request")
+	response, respErr := client.Do(request)
+	if respErr != nil {
+		return nil, respErr
+	}
+	logger.Debug().Msg("Successfully submitted HTTP request")
+
+	// Evaluate the response
+	validateErr := validateResponse(ctx, response, logger, client.AuthInfo.ReadLimit)
+	if validateErr != nil {
+		return nil, validateErr
+	}
+
+	logger.Debug().Msg("Successfully validated HTTP response")
+
+	return response, nil
 }
