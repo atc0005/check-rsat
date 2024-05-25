@@ -9,8 +9,10 @@ package rsat
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"sort"
+	"strconv"
 	"time"
 
 	"github.com/atc0005/go-nagios"
@@ -18,14 +20,38 @@ import (
 
 // OrganizationsResponse represents the API response from a request for all
 // organizations in the Red Hat Satellite server.
+//
+// https://access.redhat.com/documentation/en-us/red_hat_satellite/6.5/html-single/api_guide/index#sect-API_Guide-Understanding_the_JSON_Response_Format
+// https://access.redhat.com/documentation/en-us/red_hat_satellite/6.15/html-single/api_guide/index#sect-API_Guide-Understanding_the_JSON_Response_Format
 type OrganizationsResponse struct {
+	// Organizations is the collection of Organizations returned in the API
+	// query response.
 	Organizations []Organization `json:"results"`
-	Search        NullString     `json:"search"`
-	Sort          SortOptions    `json:"sort"`
-	Subtotal      int            `json:"subtotal"`
-	Total         int            `json:"total"`
-	Page          int            `json:"page"`
-	PerPage       int            `json:"per_page"`
+
+	// Search is the search string based on scoped_scoped syntax.
+	Search NullString `json:"search"`
+
+	// Sort is the optional sorting criteria for API query responses.
+	Sort SortOptions `json:"sort"`
+
+	// Subtotal is the number of objects returned with the given search
+	// parameters. If there is no search, then subtotal is equal to total.
+	Subtotal int `json:"subtotal"`
+
+	// Total is the total number of objects without any search parameters.
+	Total int `json:"total"`
+
+	// Page is the page number for the current query response results.
+	//
+	// NOTE: In practice, this value has been found to be  returned as an
+	// integer in the first response and as a string value for each additional
+	// page of results. The json.Number type accepts either format when
+	// decoding the response.
+	Page json.Number `json:"page"`
+
+	// PerPage is the pagination limit applied to API query results. If not
+	// specified by the client this is the default value set by the API.
+	PerPage int `json:"per_page"`
 }
 
 // Organization is an isolated collection of systems, content, and other
@@ -64,57 +90,77 @@ func GetOrganizations(ctx context.Context, client *APIClient) ([]Organization, e
 		OrganizationsAPIEndPointURLTemplate,
 		client.AuthInfo.Server,
 		client.AuthInfo.Port,
-		client.Limits.PerPage,
 	)
 
-	request, err := prepareRequest(ctx, client, apiURL)
-	if err != nil {
-		return nil, err
-	}
+	allOrgs := make([]Organization, 0, client.Limits.PerPage*2)
 
-	logger.Debug().Msg("Submitting HTTP request")
+	apiURLQueryParams := make(map[string]string)
+	apiURLQueryParams[APIEndpointURLQueryParamFullResultKey] = APIEndpointURLQueryParamFullResultDefaultValue
+	apiURLQueryParams[APIEndpointURLQueryParamPerPageKey] = strconv.Itoa(client.Limits.PerPage)
 
-	response, respErr := client.Do(request)
-	if respErr != nil {
-		return nil, respErr
-	}
+	var nextPage int
+	remainingOrgs := true
 
-	logger.Debug().Msg("Successfully submitted HTTP request")
+	for remainingOrgs {
+		logger.Debug().
+			Msg("Collecting organizations from the API")
 
-	// Make sure that we close the response body once we're done with it
-	defer func() {
-		if closeErr := response.Body.Close(); closeErr != nil {
-			logger.Error().Err(closeErr).Msgf("error closing response body")
+		nextPage++
+		apiURLQueryParams[APIEndpointURLQueryParamPageKey] = strconv.Itoa(nextPage)
+
+		response, respErr := submitAPIQueryRequest(ctx, client, apiURL, apiURLQueryParams, logger)
+		if respErr != nil {
+			return nil, respErr
 		}
-	}()
 
-	// Evaluate the response
-	validateErr := validateResponse(ctx, response, logger, client.AuthInfo.ReadLimit)
-	if validateErr != nil {
-		return nil, err
+		logger.Debug().Msgf(
+			"Decoding JSON data from %q using a limit of %d bytes",
+			apiURL,
+			client.AuthInfo.ReadLimit,
+		)
+
+		var orgsQueryResp OrganizationsResponse
+		decodeErr := decode(&orgsQueryResp, response.Body, logger, apiURL, client.AuthInfo.ReadLimit)
+		if decodeErr != nil {
+			return nil, decodeErr
+		}
+
+		logger.Debug().
+			Str("api_endpoint", apiURL).
+			Msg("Successfully decoded JSON data")
+
+		// Close the response body once we're done with it. We explicitly
+		// close here vs deferring via closure to prevent accumulating client
+		// connections to the API if we need to perform multiple paged
+		// requests.
+		if closeErr := response.Body.Close(); closeErr != nil {
+			logger.Error().Err(closeErr).Msg("error closing response body")
+		}
+
+		allOrgs = append(allOrgs, orgsQueryResp.Organizations...)
+
+		numNewOrgs := len(orgsQueryResp.Organizations)
+		numCollectedOrgs := len(allOrgs)
+		numOrgsRemaining := orgsQueryResp.Subtotal - numCollectedOrgs
+
+		logger.Debug().
+			Str("api_endpoint", apiURL).
+			Int("orgs_collected", numCollectedOrgs).
+			Int("orgs_new", numNewOrgs).
+			Int("orgs_remaining", numOrgsRemaining).
+			Msg("Added decoded organizations to collection")
+
+		logger.Debug().
+			Msg("Determining if we have collected all organizations from the API")
+
+		remainingOrgs = numOrgsRemaining != 0
 	}
-
-	logger.Debug().Msgf(
-		"Decoding JSON data from %q using a limit of %d bytes",
-		apiURL,
-		client.AuthInfo.ReadLimit,
-	)
-
-	var orgsQueryResp OrganizationsResponse
-	decodeErr := decode(&orgsQueryResp, response.Body, logger, apiURL, client.AuthInfo.ReadLimit)
-	if decodeErr != nil {
-		return nil, decodeErr
-	}
-
-	logger.Debug().
-		Str("api_endpoint", apiURL).
-		Msg("Successfully decoded JSON data")
 
 	logger.Debug().
 		Str("runtime_total", time.Since(funcTimeStart).String()).
 		Msg("Completed retrieval of all organizations")
 
-	return orgsQueryResp.Organizations, nil
+	return allOrgs, nil
 }
 
 // Sort sorts the Organizations in the collection by name.
