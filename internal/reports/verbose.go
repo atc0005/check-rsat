@@ -45,7 +45,7 @@ func syncPlansVerboseReport(w io.Writer, cfg *config.Config, orgs rsat.Organizat
 		// list the Orgs here with summary details. We will skip listing the
 		// sync plans within each org.
 		case orgs.NumProblemPlans() > 0:
-			fmt.Fprintf(
+			_, _ = fmt.Fprintf(
 				w,
 				"%s%s (%d stuck, %d enabled, %d disabled)%s",
 				nagios.CheckOutputEOL,
@@ -58,7 +58,7 @@ func syncPlansVerboseReport(w io.Writer, cfg *config.Config, orgs rsat.Organizat
 			continue
 
 		default:
-			fmt.Fprintf(
+			_, _ = fmt.Fprintf(
 				w,
 				"* %s (%d enabled, %d disabled)%s",
 				org.Name,
@@ -80,7 +80,7 @@ func syncPlansVerboseReport(w io.Writer, cfg *config.Config, orgs rsat.Organizat
 			// are looking at isn't stuck (to contrast against any plans which
 			// are stuck).
 			case orgs.NumProblemPlans() > 0:
-				fmt.Fprintf(
+				_, _ = fmt.Fprintf(
 					w,
 					"  * [Name: %s, Days Stuck: %s, Interval: %s, Next Sync: %s]%s",
 					syncPlan.Name,
@@ -91,7 +91,7 @@ func syncPlansVerboseReport(w io.Writer, cfg *config.Config, orgs rsat.Organizat
 				)
 
 			default:
-				fmt.Fprintf(
+				_, _ = fmt.Fprintf(
 					w,
 					"  * [Name: %s, Interval: %s, Next Sync: %s]%s",
 					syncPlan.Name,
@@ -102,6 +102,6 @@ func syncPlansVerboseReport(w io.Writer, cfg *config.Config, orgs rsat.Organizat
 			}
 		}
 
-		fmt.Fprint(w, nagios.CheckOutputEOL)
+		_, _ = fmt.Fprint(w, nagios.CheckOutputEOL)
 	}
 }

@@ -15,7 +15,7 @@ import (
 )
 
 func addSyncPlansReportLeadIn(w io.Writer) {
-	fmt.Fprintf(
+	_, _ = fmt.Fprintf(
 		w,
 		"%sSYNC PLANS OVERVIEW%s%s",
 		nagios.CheckOutputEOL,
