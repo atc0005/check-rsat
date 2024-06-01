@@ -48,8 +48,8 @@ func simpleTableProblemStateToString(v interface{}) string {
 // syncPlansSimpleTableReport is a helper function that performs the bulk of
 // the "simple table" report output logic.
 func syncPlansSimpleTableReport(w io.Writer, cfg *config.Config, headerRow string, dataRowTmpl string, orgs rsat.Organizations) {
-	fmt.Fprintln(w, headerRow)
-	fmt.Fprintln(w, simpleTableHeaderSeparatorRow(headerRow, "\t"))
+	_, _ = fmt.Fprintln(w, headerRow)
+	_, _ = fmt.Fprintln(w, simpleTableHeaderSeparatorRow(headerRow, "\t"))
 
 	for i, org := range orgs {
 		for _, syncPlan := range org.SyncPlans {
@@ -58,7 +58,7 @@ func syncPlansSimpleTableReport(w io.Writer, cfg *config.Config, headerRow strin
 				continue
 
 			case orgs.NumProblemPlans() > 0:
-				fmt.Fprintf(
+				_, _ = fmt.Fprintf(
 					w,
 					dataRowTmpl,
 					org.Name,
@@ -70,7 +70,7 @@ func syncPlansSimpleTableReport(w io.Writer, cfg *config.Config, headerRow strin
 				)
 
 			default:
-				fmt.Fprintf(
+				_, _ = fmt.Fprintf(
 					w,
 					dataRowTmpl,
 					org.Name,
@@ -84,7 +84,7 @@ func syncPlansSimpleTableReport(w io.Writer, cfg *config.Config, headerRow strin
 
 		// Group sync plans visually based on Org.
 		if i+1 < len(orgs) {
-			fmt.Fprint(w, simpleTableDataSeparatorRow(headerRow, "\t"))
+			_, _ = fmt.Fprint(w, simpleTableDataSeparatorRow(headerRow, "\t"))
 		}
 	}
 }
@@ -103,8 +103,8 @@ func simpleTableHeaderSeparatorRow(headerRow string, headerRowSeparator string) 
 	}
 
 	for _, item := range headerTmplItems {
-		fmt.Fprint(&row, strings.Repeat("-", len(item)))
-		fmt.Fprint(&row, (headerRowSeparator))
+		_, _ = fmt.Fprint(&row, strings.Repeat("-", len(item)))
+		_, _ = fmt.Fprint(&row, (headerRowSeparator))
 	}
 
 	return row.String()
@@ -124,7 +124,7 @@ func SyncPlansSimpleTableReport(orgs rsat.Organizations, cfg *config.Config, log
 
 	// Add some lead-in spacing to better separate any earlier log messages from
 	// summary output
-	fmt.Fprintf(tw, "\n\n")
+	_, _ = fmt.Fprintf(tw, "\n\n")
 
 	orgs.Sort()
 
@@ -147,7 +147,7 @@ func SyncPlansSimpleTableReport(orgs rsat.Organizations, cfg *config.Config, log
 
 	syncPlansSimpleTableReport(tw, cfg, headerRow, dataRowTmpl, orgs)
 
-	fmt.Fprintln(tw)
+	_, _ = fmt.Fprintln(tw)
 
 	if err := tw.Flush(); err != nil {
 		logger.Error().Err(err).Msg("Error flushing tabwriter")

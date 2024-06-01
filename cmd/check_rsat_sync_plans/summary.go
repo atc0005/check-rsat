@@ -50,7 +50,7 @@ func setLongServiceOutput(report string, _ rsat.Organizations, cfg *config.Confi
 
 	// If provided, put the report content first.
 	if report != "" {
-		fmt.Fprintf(
+		_, _ = fmt.Fprintf(
 			&output,
 			"%s%s",
 			report,
@@ -59,9 +59,9 @@ func setLongServiceOutput(report string, _ rsat.Organizations, cfg *config.Confi
 	}
 
 	if cfg.ShowVerbose {
-		fmt.Fprintf(&output, "%s", nagios.CheckOutputEOL)
+		_, _ = fmt.Fprintf(&output, "%s", nagios.CheckOutputEOL)
 
-		fmt.Fprintf(
+		_, _ = fmt.Fprintf(
 			&output,
 			"%s------%s%s",
 			nagios.CheckOutputEOL,
@@ -69,49 +69,49 @@ func setLongServiceOutput(report string, _ rsat.Organizations, cfg *config.Confi
 			nagios.CheckOutputEOL,
 		)
 
-		fmt.Fprintf(
+		_, _ = fmt.Fprintf(
 			&output,
 			"Configuration settings: %s%s",
 			nagios.CheckOutputEOL,
 			nagios.CheckOutputEOL,
 		)
 
-		fmt.Fprintf(
+		_, _ = fmt.Fprintf(
 			&output,
 			"* Server: %v%s",
 			cfg.Server,
 			nagios.CheckOutputEOL,
 		)
 
-		fmt.Fprintf(
+		_, _ = fmt.Fprintf(
 			&output,
 			"* Port: %v%s",
 			cfg.TCPPort,
 			nagios.CheckOutputEOL,
 		)
 
-		fmt.Fprintf(
+		_, _ = fmt.Fprintf(
 			&output,
 			"* Username: %v%s",
 			cfg.Username,
 			nagios.CheckOutputEOL,
 		)
 
-		fmt.Fprintf(
+		_, _ = fmt.Fprintf(
 			&output,
 			"* NetworkType: %v%s",
 			cfg.NetworkType,
 			nagios.CheckOutputEOL,
 		)
 
-		fmt.Fprintf(
+		_, _ = fmt.Fprintf(
 			&output,
 			"* Timeout: %v%s",
 			cfg.Timeout(),
 			nagios.CheckOutputEOL,
 		)
 
-		fmt.Fprintf(
+		_, _ = fmt.Fprintf(
 			&output,
 			"* UserAgent: %v%s",
 			cfg.UserAgent(),
