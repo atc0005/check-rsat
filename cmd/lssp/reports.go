@@ -22,16 +22,16 @@ func generateReport(w io.Writer, orgs rsat.Organizations, cfg *config.Config, lo
 
 	switch cfg.InspectorOutputFormat {
 	case config.InspectorOutputFormatOverview:
-		fmt.Fprintln(w, reports.SyncPlansOverviewReport(orgs, cfg, logger))
+		_, _ = fmt.Fprintln(w, reports.SyncPlansOverviewReport(orgs, cfg, logger))
 
 	case config.InspectorOutputFormatSimpleTable:
-		fmt.Fprintln(w, reports.SyncPlansSimpleTableReport(orgs, cfg, logger))
+		_, _ = fmt.Fprintln(w, reports.SyncPlansSimpleTableReport(orgs, cfg, logger))
 
 	case config.InspectorOutputFormatPrettyTable:
-		fmt.Fprintln(w, reports.SyncPlansPrettyTableReport(orgs, cfg, logger))
+		_, _ = fmt.Fprintln(w, reports.SyncPlansPrettyTableReport(orgs, cfg, logger))
 
 	case config.InspectorOutputFormatVerbose:
-		fmt.Fprintln(w, reports.SyncPlansVerboseReport(orgs, cfg, logger))
+		_, _ = fmt.Fprintln(w, reports.SyncPlansVerboseReport(orgs, cfg, logger))
 	}
 
 }

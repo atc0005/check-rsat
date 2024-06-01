@@ -28,7 +28,7 @@ func SyncPlansOverviewReport(orgs rsat.Organizations, _ *config.Config, _ zerolo
 	orgs.Sort()
 
 	for _, org := range orgs {
-		fmt.Fprintf(
+		_, _ = fmt.Fprintf(
 			&output,
 			"* %s (%d problems, %d enabled, %d disabled)%s",
 			org.Name,
