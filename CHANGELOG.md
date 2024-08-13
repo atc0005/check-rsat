@@ -26,6 +26,24 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.1.14] - 2024-08-13
+
+### Changed
+
+#### Dependency Updates
+
+- (GH-299) Build Image: Bump atc0005/go-ci from go-ci-oldstable-build-v0.21.4 to go-ci-oldstable-build-v0.21.5 in /dependabot/docker/builds
+- (GH-302) Build Image: Bump atc0005/go-ci from go-ci-oldstable-build-v0.21.5 to go-ci-oldstable-build-v0.21.6 in /dependabot/docker/builds
+- (GH-304) Build Image: Bump atc0005/go-ci from go-ci-oldstable-build-v0.21.6 to go-ci-oldstable-build-v0.21.7 in /dependabot/docker/builds
+- (GH-312) Build Image: Bump atc0005/go-ci from go-ci-oldstable-build-v0.21.7 to go-ci-oldstable-build-v0.21.8 in /dependabot/docker/builds
+- (GH-309) Go Dependency: Bump golang.org/x/sys from 0.22.0 to 0.23.0
+- (GH-313) Go Dependency: Bump golang.org/x/sys from 0.23.0 to 0.24.0
+- (GH-310) Go Runtime: Bump golang from 1.21.12 to 1.21.13 in /dependabot/docker/go
+
+#### Other
+
+- (GH-306) Push `REPO_VERSION` var into containers for builds
+
 ## [v0.1.13] - 2024-07-10
 
 ### Changed
@@ -259,7 +277,8 @@ Satellite (RSAT) instances. This evaluation is performed using official APIs.
 Just to be 100% clear: this project is not affiliated with or
 endorsed by  Red Hat, Inc.
 
-[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.13...HEAD
+[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.14...HEAD
+[v0.1.14]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.14
 [v0.1.13]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.13
 [v0.1.12]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.12
 [v0.1.11]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.11
