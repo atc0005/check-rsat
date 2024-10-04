@@ -41,9 +41,6 @@ func SyncPlansVerboseReport(orgs rsat.Organizations, cfg *config.Config, _ zerol
 func syncPlansVerboseReport(w io.Writer, cfg *config.Config, orgs rsat.Organizations) {
 	for _, org := range orgs {
 		switch {
-		// If no problems to report and user opted to omit OK results we just
-		// list the Orgs here with summary details. We will skip listing the
-		// sync plans within each org.
 		case orgs.NumProblemPlans() > 0:
 			_, _ = fmt.Fprintf(
 				w,
@@ -55,7 +52,6 @@ func syncPlansVerboseReport(w io.Writer, cfg *config.Config, orgs rsat.Organizat
 				org.SyncPlans.NumDisabled(),
 				nagios.CheckOutputEOL,
 			)
-			continue
 
 		default:
 			_, _ = fmt.Fprintf(
