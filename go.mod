@@ -10,7 +10,7 @@ module github.com/atc0005/check-rsat
 go 1.19
 
 require (
-	github.com/atc0005/go-nagios v0.16.1
+	github.com/atc0005/go-nagios v0.16.2
 	github.com/rs/zerolog v1.33.0
 	zgo.at/acidtab v1.1.0
 )
