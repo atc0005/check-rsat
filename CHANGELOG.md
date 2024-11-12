@@ -26,6 +26,17 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.1.18] - 2024-11-12
+
+### Changed
+
+#### Dependency Updates
+
+- (GH-364) Build Image: Bump atc0005/go-ci from go-ci-oldstable-build-v0.21.14 to go-ci-oldstable-build-v0.21.15 in /dependabot/docker/builds
+- (GH-365) Go Dependency: Bump github.com/atc0005/go-nagios from 0.16.1 to 0.17.1
+- (GH-359) Go Dependency: Bump golang.org/x/sys from 0.25.0 to 0.27.0
+- (GH-356) Go Runtime: Bump golang from 1.22.8 to 1.22.9 in /dependabot/docker/go
+
 ## [v0.1.17] - 2024-10-04
 
 ### Changed
@@ -311,7 +322,8 @@ Satellite (RSAT) instances. This evaluation is performed using official APIs.
 Just to be 100% clear: this project is not affiliated with or
 endorsed by  Red Hat, Inc.
 
-[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.17...HEAD
+[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.18...HEAD
+[v0.1.18]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.18
 [v0.1.17]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.17
 [v0.1.16]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.16
 [v0.1.15]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.15
