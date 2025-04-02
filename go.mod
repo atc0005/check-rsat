@@ -9,8 +9,6 @@ module github.com/atc0005/check-rsat
 
 go 1.23.0
 
-toolchain go1.24.1
-
 require (
 	github.com/atc0005/go-nagios v0.19.0
 	github.com/rs/zerolog v1.34.0
