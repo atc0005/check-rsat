@@ -26,6 +26,35 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.1.19] - 2025-04-15
+
+### Changed
+
+#### Dependency Updates
+
+- (GH-370) Build Image: Bump atc0005/go-ci from go-ci-oldstable-build-v0.21.15 to go-ci-oldstable-build-v0.21.16 in /dependabot/docker/builds
+- (GH-378) Build Image: Bump atc0005/go-ci from go-ci-oldstable-build-v0.21.16 to go-ci-oldstable-build-v0.21.17 in /dependabot/docker/builds
+- (GH-383) Build Image: Bump atc0005/go-ci from go-ci-oldstable-build-v0.21.17 to go-ci-oldstable-build-v0.21.18 in /dependabot/docker/builds
+- (GH-430) Build Image: Bump atc0005/go-ci from go-ci-oldstable-build-v0.21.18 to go-ci-oldstable-build-v0.22.8 in /dependabot/docker/builds
+- (GH-436) Build Image: Bump atc0005/go-ci from go-ci-oldstable-build-v0.22.8 to go-ci-oldstable-build-v0.22.9 in /dependabot/docker/builds
+- (GH-437) Disable Dependabot automatic PR rebasing
+- (GH-373) Go Dependency: Bump github.com/atc0005/go-nagios from 0.17.1 to 0.18.0
+- (GH-375) Go Dependency: Bump github.com/atc0005/go-nagios from 0.18.0 to 0.18.1
+- (GH-377) Go Dependency: Bump github.com/atc0005/go-nagios from 0.18.1 to 0.19.0
+- (GH-391) Go Dependency: Bump github.com/mattn/go-colorable from 0.1.13 to 0.1.14
+- (GH-427) Go Dependency: Bump github.com/rs/zerolog from 1.33.0 to 1.34.0
+- (GH-384) Go Dependency: Bump golang.org/x/sys from 0.27.0 to 0.28.0
+- (GH-420) Go Dependency: Bump golang.org/x/sys from 0.28.0 to 0.31.0
+- (GH-439) Go Dependency: Bump golang.org/x/sys from 0.31.0 to 0.32.0
+- (GH-432) Go Runtime: Bump golang from 1.22.10 to 1.23.8 in /dependabot/docker/go
+- (GH-381) Go Runtime: Bump golang from 1.22.9 to 1.22.10 in /dependabot/docker/go
+- (GH-424) go.mod: update minimum Go version to 1.23.0
+- (GH-413) Update project to Go 1.23 series
+
+### Fixed
+
+- (GH-434) Fix invalid Dependabot go.mod changes
+
 ## [v0.1.18] - 2024-11-12
 
 ### Changed
@@ -322,7 +351,8 @@ Satellite (RSAT) instances. This evaluation is performed using official APIs.
 Just to be 100% clear: this project is not affiliated with or
 endorsed by  Red Hat, Inc.
 
-[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.18...HEAD
+[Unreleased]: https://github.com/atc0005/check-rsat/compare/v0.1.19...HEAD
+[v0.1.19]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.19
 [v0.1.18]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.18
 [v0.1.17]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.17
 [v0.1.16]: https://github.com/atc0005/check-rsat/releases/tag/v0.1.16
