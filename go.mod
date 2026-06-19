@@ -11,7 +11,7 @@ go 1.23.0
 
 require (
 	github.com/atc0005/go-nagios v0.20.0
-	github.com/rs/zerolog v1.34.0
+	github.com/rs/zerolog v1.35.1
 	zgo.at/acidtab v1.1.0
 )
 
