@@ -250,10 +250,7 @@ func (sp SyncPlan) DaysStuck() int {
 		timeSinceStuck := time.Since(time.Time(sp.OriginalSyncDate)).Hours()
 
 		// Toss remainder so that we only get the whole number of days
-		daysStuck := int(math.Trunc(timeSinceStuck / 24))
-		if daysStuck < 0 {
-			daysStuck = 0
-		}
+		daysStuck := max(int(math.Trunc(timeSinceStuck/24)), 0)
 
 		return daysStuck
 
@@ -261,10 +258,7 @@ func (sp SyncPlan) DaysStuck() int {
 		timeSinceStuck := time.Since(time.Time(sp.NextSync)).Hours()
 
 		// Toss remainder so that we only get the whole number of days
-		daysStuck := int(math.Trunc(timeSinceStuck / 24))
-		if daysStuck < 0 {
-			daysStuck = 0
-		}
+		daysStuck := max(int(math.Trunc(timeSinceStuck/24)), 0)
 
 		return daysStuck
 	}
