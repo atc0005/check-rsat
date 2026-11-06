@@ -28,7 +28,7 @@ type Subscription struct {
 	Hypervisor         Hypervisor      `json:"hypervisor,omitempty"`
 	StartDate          StandardAPITime `json:"start_date"`
 	EndDate            StandardAPITime `json:"end_date"`
-	Cores              interface{}     `json:"cores"`             // null is the only value I've encountered
+	Cores              any             `json:"cores"`             // null is the only value I've encountered
 	MultiEntitlement   *bool           `json:"multi_entitlement"` // null or true/false
 	AccountNumber      *int            `json:"account_number"`    // null or integer
 	Available          int             `json:"available"`

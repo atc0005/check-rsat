@@ -140,7 +140,7 @@ type SortOptions struct {
 
 // decode is a helper function intended to handle the core JSON decoding tasks
 // for various JSON sources (file, http body, etc.).
-func decode(dst interface{}, reader io.Reader, logger zerolog.Logger, sourceName string, limit int64) error {
+func decode(dst any, reader io.Reader, logger zerolog.Logger, sourceName string, limit int64) error {
 	if reader == nil {
 		return &PrepError{
 			Task:    PrepTaskDecode,
