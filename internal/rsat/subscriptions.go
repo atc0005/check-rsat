@@ -25,7 +25,7 @@ type SubscriptionsResponse struct {
 // from Red Hat. Subscription allocations are applied/managed separately
 // within each Red Hat Satellite organization.
 type Subscription struct {
-	Hypervisor         Hypervisor      `json:"hypervisor,omitempty"`
+	Hypervisor         Hypervisor      `json:"hypervisor,omitzero"`
 	StartDate          StandardAPITime `json:"start_date"`
 	EndDate            StandardAPITime `json:"end_date"`
 	Cores              any             `json:"cores"`             // null is the only value I've encountered
