@@ -43,7 +43,7 @@ func prettyTableFormatColumnHeader(s string) string {
 // prettyTableProblemState is a helper function that formats a given state
 // (problem present, or not) for use in a "pretty table" report as a status
 // indicator.
-func prettyTableProblemState(v interface{}) string {
+func prettyTableProblemState(v any) string {
 	if b, ok := v.(bool); ok {
 		return map[bool]string{
 			false: "\x1b[32m ✔ \x1b[0m",

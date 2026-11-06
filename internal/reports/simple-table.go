@@ -35,7 +35,7 @@ func simpleTableDataSeparatorRow(headerRow string, headerRowSeparator string) st
 // simpleTableProblemStateToString is a helper function that formats a given
 // state (problem present, or not) for use in a "simple table" report as a
 // status indicator.
-func simpleTableProblemStateToString(v interface{}) string {
+func simpleTableProblemStateToString(v any) string {
 	if b, ok := v.(bool); ok {
 		return map[bool]string{
 			false: "  OK  ",
